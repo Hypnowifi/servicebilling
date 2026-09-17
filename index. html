@@ -1,0 +1,244 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>HypnoWifi Billing</title>
+
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: Arial, sans-serif;
+    }
+
+    body {
+      background: #f4f6f8;
+      color: #222;
+    }
+
+    header {
+      background: #111827;
+      color: white;
+      padding: 20px;
+      text-align: center;
+    }
+
+    header h1 {
+      margin-bottom: 5px;
+    }
+
+    .container {
+      max-width: 1000px;
+      margin: 25px auto;
+      padding: 15px;
+    }
+
+    .cards {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+      gap: 15px;
+      margin-bottom: 25px;
+    }
+
+    .card {
+      background: white;
+      padding: 20px;
+      border-radius: 12px;
+      box-shadow: 0 3px 10px rgba(0,0,0,0.08);
+    }
+
+    .card h3 {
+      color: #555;
+      margin-bottom: 10px;
+    }
+
+    .card p {
+      font-size: 28px;
+      font-weight: bold;
+    }
+
+    .section {
+      background: white;
+      padding: 20px;
+      border-radius: 12px;
+      margin-bottom: 20px;
+    }
+
+    input, select, button {
+      width: 100%;
+      padding: 12px;
+      margin-top: 10px;
+      border: 1px solid #ddd;
+      border-radius: 8px;
+    }
+
+    button {
+      background: #111827;
+      color: white;
+      border: none;
+      cursor: pointer;
+      font-weight: bold;
+    }
+
+    button:hover {
+      background: #374151;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 15px;
+    }
+
+    th, td {
+      padding: 12px;
+      border-bottom: 1px solid #ddd;
+      text-align: left;
+    }
+
+    .status {
+      color: green;
+      font-weight: bold;
+    }
+  </style>
+</head>
+
+<body>
+
+<header>
+  <h1>HypnoWifi</h1>
+  <p>WiFi Billing System</p>
+</header>
+
+<div class="container">
+
+  <div class="cards">
+
+    <div class="card">
+      <h3>Active Users</h3>
+      <p id="users">0</p>
+    </div>
+
+    <div class="card">
+      <h3>Today's Sales</h3>
+      <p>KSh <span id="sales">0</span></p>
+    </div>
+
+    <div class="card">
+      <h3>Hotspot Users</h3>
+      <p id="hotspot">0</p>
+    </div>
+
+    <div class="card">
+      <h3>PPPoE Users</h3>
+      <p id="pppoe">0</p>
+    </div>
+
+  </div>
+
+  <div class="section">
+
+    <h2>Create WiFi User</h2>
+
+    <input type="text" id="username" placeholder="Username">
+
+    <input type="text" id="password" placeholder="Password">
+
+    <select id="package">
+      <option value="10">30 Minutes - KSh 10</option>
+      <option value="20">2 Hours - KSh 20</option>
+      <option value="30">5 Hours - KSh 30</option>
+      <option value="50">24 Hours - KSh 50</option>
+    </select>
+
+    <select id="service">
+      <option value="hotspot">Hotspot</option>
+      <option value="pppoe">PPPoE</option>
+    </select>
+
+    <button onclick="createUser()">Create User</button>
+
+  </div>
+
+  <div class="section">
+
+    <h2>Users</h2>
+
+    <table>
+      <thead>
+        <tr>
+          <th>Username</th>
+          <th>Service</th>
+          <th>Package</th>
+          <th>Status</th>
+        </tr>
+      </thead>
+
+      <tbody id="userTable">
+      </tbody>
+
+    </table>
+
+  </div>
+
+</div>
+
+<script>
+
+let users = 0;
+let sales = 0;
+let hotspotUsers = 0;
+let pppoeUsers = 0;
+
+function createUser() {
+
+  const username = document.getElementById("username").value;
+  const password = document.getElementById("password").value;
+  const packagePrice = document.getElementById("package").value;
+  const service = document.getElementById("service").value;
+
+  if (username === "" || password === "") {
+    alert("Please enter username and password.");
+    return;
+  }
+
+  users++;
+  sales += Number(packagePrice);
+
+  if (service === "hotspot") {
+    hotspotUsers++;
+  } else {
+    pppoeUsers++;
+  }
+
+  document.getElementById("users").textContent = users;
+  document.getElementById("sales").textContent = sales;
+  document.getElementById("hotspot").textContent = hotspotUsers;
+  document.getElementById("pppoe").textContent = pppoeUsers;
+
+  const table = document.getElementById("userTable");
+
+  const row = document.createElement("tr");
+
+  row.innerHTML = `
+    <td>${username}</td>
+    <td>${service.toUpperCase()}</td>
+    <td>KSh ${packagePrice}</td>
+    <td class="status">Active</td>
+  `;
+
+  table.appendChild(row);
+
+  document.getElementById("username").value = "";
+  document.getElementById("password").value = "";
+
+  alert("User created successfully!");
+
+}
+
+</script>
+
+</body>
+</html>
